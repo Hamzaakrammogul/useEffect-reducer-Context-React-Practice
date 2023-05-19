@@ -6,7 +6,7 @@ import Button from '../UI/Button/Button';
 
 //Whenever the actions is triggered react automatically triggers reducer function and pass it the last snapshot of the state and also all the data executed inside the component 
 
-const reducer = (state, action) => {
+const emailReducer = (state, action) => {
 
 if (action.type === 'USER_INPUT'){
   return {value: action.val, isValid: action.val.includes('@')};
@@ -17,16 +17,29 @@ if(action.type === 'INPUT_BLUR'){
 }
   //getting the last state and returning the updated state
   return {value: '', isValid: false};
-}
+};
 
+const pswdReducer = (state, action) => {
+
+  if(action.type === 'USER_INPUT'){
+    return {value: action.val, isValid: action.val.trim().length>6}
+  }
+  if(action.type=== 'INPUT_BLUR'){
+    return {value: state.value, isValid: state.value.trim().length>6}
+  }
+
+  return {value: '', isValid: false}
+}
 const Login = (props) => {
   // const [enteredEmail, setEnteredEmail] = useState('');
   // const [emailIsValid, setEmailIsValid] = useState();
-  const [enteredPassword, setEnteredPassword] = useState('');
-  const [passwordIsValid, setPasswordIsValid] = useState();
+  // const [enteredPassword, setEnteredPassword] = useState('');
+  // const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
 
-const [stateEmail, dispatchEmail] = useReducer(reducer, {value: '', isValid: false});
+const [stateEmail, dispatchEmail] = useReducer(emailReducer, {value: '', isValid: false});
+
+const [statePswd, dispatchPswd] = useReducer(pswdReducer, {value: '', isValid: false})
 
   // useEffect(() => {
   //   const identifier =setTimeout(() => {
@@ -46,15 +59,16 @@ const [stateEmail, dispatchEmail] = useReducer(reducer, {value: '', isValid: fal
     // setEnteredEmail(event.target.value);
     dispatchEmail({type: 'USER_INPUT', val: event.target.value})
     setFormIsValid(
-      event.target.value.includes('@') && enteredPassword.trim().length > 6
+      event.target.value.includes('@') && statePswd.isValid
     );
   };
 
   const passwordChangeHandler = (event) => {
-    setEnteredPassword(event.target.value);
+    //setEnteredPassword(event.target.value);
+    dispatchPswd({type: 'USER_INPUT', val: event.target.value})
 
     setFormIsValid(
-      event.target.value.trim().length > 6 && stateEmail.isValid
+      statePswd.isValid && stateEmail.isValid
     ); 
   };
 
@@ -65,12 +79,14 @@ const [stateEmail, dispatchEmail] = useReducer(reducer, {value: '', isValid: fal
   };
 
   const validatePasswordHandler = () => {
-    setPasswordIsValid(enteredPassword.trim().length > 6);
+   // setPasswordIsValid(enteredPassword.trim().length > 6);
+   dispatchPswd({type: 'INPUT_BLUR'})
+
   };
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(stateEmail.value, enteredPassword);
+    props.onLogin(stateEmail.value, statePswd.value);
   };
 
   return (
@@ -90,14 +106,14 @@ const [stateEmail, dispatchEmail] = useReducer(reducer, {value: '', isValid: fal
           />
         </div>
         <div
-          className={`${classes.control} ${passwordIsValid === false ? classes.invalid : ''
+          className={`${classes.control} ${statePswd.isValid === false ? classes.invalid : ''
             }`}
         >
           <label htmlFor="password">Password</label>
           <input
             type="password"
             id="password"
-            value={enteredPassword}
+            value={statePswd.value}
             onChange={passwordChangeHandler}
             onBlur={validatePasswordHandler}
           />

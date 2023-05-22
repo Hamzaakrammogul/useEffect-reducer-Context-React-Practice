@@ -31,45 +31,50 @@ const pswdReducer = (state, action) => {
   return {value: '', isValid: false}
 }
 const Login = (props) => {
+
   // const [enteredEmail, setEnteredEmail] = useState('');
   // const [emailIsValid, setEmailIsValid] = useState();
   // const [enteredPassword, setEnteredPassword] = useState('');
   // const [passwordIsValid, setPasswordIsValid] = useState();
-  const [formIsValid, setFormIsValid] = useState(false);
+
+const [formIsValid, setFormIsValid] = useState(false);
 
 const [stateEmail, dispatchEmail] = useReducer(emailReducer, {value: '', isValid: false});
 
 const [statePswd, dispatchPswd] = useReducer(pswdReducer, {value: '', isValid: false})
 
-  // useEffect(() => {
-  //   const identifier =setTimeout(() => {
-  //     console.log("checking th  e validity")
-  //     setFormIsValid(
-  //       enteredEmail.includes('@') && enteredPassword.trim().length > 6
-  //     );
-  //   }, 500);
-  //   return () => {
-  //     console.log("Clean Up "+enteredEmail);
-  //     clearTimeout(identifier);
-  //   };
-  // }, [enteredEmail, enteredPassword]);
+const {isValid: emailIsValid} = stateEmail ;
+const {isValid: pswdIsValid} = statePswd;
+
+  useEffect(() => {
+    const identifier =setTimeout(() => {
+      console.log("checking th  e validity")
+      setFormIsValid(
+        emailIsValid && pswdIsValid
+      );
+    }, 500);
+    return () => {
+      console.log("Clean Up");
+      clearTimeout(identifier);
+    };
+  }, [emailIsValid, pswdIsValid]);
   
   
   const emailChangeHandler = (event) => {
     // setEnteredEmail(event.target.value);
     dispatchEmail({type: 'USER_INPUT', val: event.target.value})
-    setFormIsValid(
-      event.target.value.includes('@') && statePswd.isValid
-    );
+    // setFormIsValid(
+    //   event.target.value.includes('@') && statePswd.isValid
+    // );
   };
 
   const passwordChangeHandler = (event) => {
     //setEnteredPassword(event.target.value);
     dispatchPswd({type: 'USER_INPUT', val: event.target.value})
 
-    setFormIsValid(
-      statePswd.isValid && stateEmail.isValid
-    ); 
+    // setFormIsValid(
+    //   statePswd.isValid && stateEmail.isValid
+    // ); 
   };
 
   const validateEmailHandler = () => {

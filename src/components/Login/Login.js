@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, useContext } from 'react';
 
 import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
 import Button from '../UI/Button/Button';
+import AuthContext from '../../store/auth-context';
 
 //Whenever the actions is triggered react automatically triggers reducer function and pass it the last snapshot of the state and also all the data executed inside the component 
 
@@ -43,6 +44,8 @@ const [stateEmail, dispatchEmail] = useReducer(emailReducer, {value: '', isValid
 
 const [statePswd, dispatchPswd] = useReducer(pswdReducer, {value: '', isValid: false})
 
+const authCtx = useContext(AuthContext);
+
 const {isValid: emailIsValid} = stateEmail ;
 const {isValid: pswdIsValid} = statePswd;
 
@@ -79,7 +82,7 @@ const {isValid: pswdIsValid} = statePswd;
 
   const validateEmailHandler = () => {
     // setEmailIsValid(stateEmail.isValid);
-    dispatchEmail({type: 'INPUT_BLUR' });
+    dispatchEmail({type: 'INPUT_BLUR' })
 
   };
 
@@ -91,7 +94,7 @@ const {isValid: pswdIsValid} = statePswd;
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(stateEmail.value, statePswd.value);
+    authCtx.onLogin(stateEmail.value, statePswd.value);
   };
 
   return (

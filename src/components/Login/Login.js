@@ -4,6 +4,7 @@ import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
 import Button from '../UI/Button/Button';
 import AuthContext from '../../store/auth-context';
+import Input from '../UI/Input/Input';
 
 //Whenever the actions is triggered react automatically triggers reducer function and pass it the last snapshot of the state and also all the data executed inside the component 
 
@@ -46,6 +47,7 @@ const [statePswd, dispatchPswd] = useReducer(pswdReducer, {value: '', isValid: f
 
 const authCtx = useContext(AuthContext);
 
+//Object destructuring when you need a single valur from a object  const {Value you wanna extract : your new const name} = Object name 
 const {isValid: emailIsValid} = stateEmail ;
 const {isValid: pswdIsValid} = statePswd;
 
@@ -100,7 +102,7 @@ const {isValid: pswdIsValid} = statePswd;
   return (
     <Card className={classes.login}>
       <form onSubmit={submitHandler}>
-        <div
+        {/* <div
           className={`${classes.control} ${stateEmail.isValid === false ? classes.invalid : ''
             }`}
         >
@@ -112,8 +114,9 @@ const {isValid: pswdIsValid} = statePswd;
             onChange={emailChangeHandler}
             onBlur={validateEmailHandler}
           />
-        </div>
-        <div
+        </div> */}
+        <Input id="email" label="E-Mail" type="email" isValid={emailIsValid} value={stateEmail.value} onChange={emailChangeHandler} onBlur={validateEmailHandler} />
+        {/* <div
           className={`${classes.control} ${statePswd.isValid === false ? classes.invalid : ''
             }`}
         >
@@ -125,7 +128,9 @@ const {isValid: pswdIsValid} = statePswd;
             onChange={passwordChangeHandler}
             onBlur={validatePasswordHandler}
           />
-        </div>
+        </div> */}
+                <Input id="password" label="Password" type="password" isValid={pswdIsValid} value={statePswd.value} onChange={passwordChangeHandler} onBlur={validatePasswordHandler} />
+
         <div className={classes.actions}>
           <Button type="submit" className={classes.btn} disabled={!formIsValid}>
             Login
